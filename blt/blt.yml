@@ -1,0 +1,47 @@
+project:
+  machine_name: fews_news_blt
+
+docroot: ${repo.root}/web
+
+git:
+  # The value of a hook should be the file path to a directory containing an
+  # executable file named after the hook. Changing a hook value to 'false' will disable it.
+  # You should execute `blt blt:init:git-hooks` after modifying these values.
+  hooks:
+    pre-commit: ${blt.root}/scripts/git-hooks
+    pre-push: ${blt.root}/scripts/git-hooks
+    commit-msg: ${blt.root}/scripts/git-hooks
+  commit-msg:
+    # Commit messages must conform to this pattern.
+    pattern: "/([^ ].{15,}\\.)|(Merge branch (.)+)/"
+    # Human readable help description explaining the pattern/restrictions.
+    help_description: "The commit message should include your project prefix,
+                      followed by a hyphen and ticket number, followed by a colon and a space,
+                      fifteen characters or more describing the commit, and end with a period."
+    # Provide an example of a valid commit message.
+    example: "Update module configuration."
+  user:
+    # Name and email to use for the purposes of Git commits if you don't want to
+    # use global Git configuration.
+    name: 'Drupal CI/CD'
+    email: 'drupal-ci-cd@deploy.test'
+  remotes:
+    - ssh://codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1@codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1.drush.in:2222/~/repository.git
+
+command-hooks:
+  # Executed when front end dependencies should be installed.
+  frontend-reqs:
+    # E.g., ${docroot}/themes/custom/mytheme
+    dir: ${docroot}/themes/custom/fewsnews_theme/
+    # E.g., '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use 4.4.4 && npm install'
+    command: npm install
+  # Executed when front end assets should be generated.
+  frontend-assets:
+    # E.g., ${docroot}/themes/custom/mytheme
+    dir: ${docroot}/themes/custom/fewsnews_theme/
+    # E.g., '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use 4.4.4 && npm build'
+    command: npm run build
+
+deploy:
+  dir: deploy
+  docroot: '${deploy.dir}/web'
