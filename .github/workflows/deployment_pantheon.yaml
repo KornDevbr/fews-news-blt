@@ -1,0 +1,56 @@
+name: Deployment to Pantheon
+
+on:
+  push:
+    branches:
+      - pantheon
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    env:
+      # Variables to connect to Pantheon.
+      PANTHEON_ENVIRONMENT: ${{ vars.PANTHEON_ENVIRONMENT }}
+      SSH_REMOTE_PANTHEON_ORIGIN: ${{ secrets.SSH_REMOTE_PANTHEON_ORIGIN }}
+      PANTHEON_EMAIL: ${{ secrets.PANTHEON_EMAIL }}
+      PANTHEON_MACHINE_TOKEN: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      # Install PHP for terminus installation and using.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      # Configuring private ssh key for code pushing to Pantheon.
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Terminus installing 
+        run: |
+          cd
+          mkdir -p ~/terminus && cd ~/terminus
+          curl -L https://github.com/pantheon-systems/terminus/releases/download/3.2.1/terminus.phar --output terminus
+          chmod +x terminus
+          ./terminus self:update
+          sudo ln -s ~/terminus/terminus /usr/local/bin/terminus
+          terminus auth:login --email=$PANTHEON_EMAIL --machine-token=$PANTHEON_MACHINE_TOKEN
+
+      # Configuring SSH config to auto-adding not knowing fingerprints without asking.
+      - name: Fingerprint configuring
+        run: |
+          sudo chmod o+w /etc/ssh/ssh_config
+          echo "StrictHostKeyChecking accept-new" >> /etc/ssh/ssh_config
+
+      - name: Code deploying to Pantheon
+        run: |
+          git push $SSH_REMOTE_PANTHEON_ORIGIN $GITHUB_REF_NAME
+          terminus drush $PANTHEON_ENVIRONMENT cr

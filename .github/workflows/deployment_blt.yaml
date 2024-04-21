@@ -1,0 +1,73 @@
+name: Deployment to Pantheon via BLT
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deployment_blt:
+    name: "Deploy code to Pantheon via BLT"
+    timeout-minutes: 7
+    runs-on: ubuntu-latest
+    env:
+      # Variables to connect to Pantheon.
+      PANTHEON_ENVIRONMENT: ${{ vars.PANTHEON_ENVIRONMENT }}
+      PANTHEON_EMAIL: ${{ secrets.PANTHEON_EMAIL }}
+      PANTHEON_MACHINE_TOKEN: ${{ secrets.PANTHEON_MACHINE_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Install PHP.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      # Install Node for theme installation.
+      - name: Node js installer
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: web/themes/custom/fewsnews_theme/package-lock.json
+
+      # Configuring private ssh key for code deployment to Pantheon.
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Terminus installing
+        run: |
+          cd
+          mkdir -p ~/terminus && cd ~/terminus
+          curl -L https://github.com/pantheon-systems/terminus/releases/download/3.2.1/terminus.phar --output terminus
+          chmod +x terminus
+          ./terminus self:update
+          sudo ln -s ~/terminus/terminus /usr/local/bin/terminus
+          terminus auth:login --email=$PANTHEON_EMAIL --machine-token=$PANTHEON_MACHINE_TOKEN
+
+      # Configuring SSH config to auto-adding not knowing fingerprints without asking.
+      - name: Fingerprint configuring
+        run: |
+          sudo chmod o+w /etc/ssh/ssh_config
+          echo "StrictHostKeyChecking accept-new" >> /etc/ssh/ssh_config
+
+      - name: BLT install
+        run: |
+          composer require acquia/blt:^13.7
+
+      - name: Build and Deploy the artifacts
+        run: |
+          ./vendor/bin/blt artifact:deploy --branch $GITHUB_REF_NAME --no-interaction --verbose
+
+      - name: Deploy changes to the Drupal website on Pantheon.
+        run: |
+          sleep 30
+          terminus drush $PANTHEON_ENVIRONMENT deploy
