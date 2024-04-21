@@ -4,7 +4,7 @@ langcode: en
 uuid: 9385300f-9551-4a1a-8ca5-f13c6557421a
 name: 'Fews News BLT'
 mail: admin@example.com
-slogan: ''
+slogan: 'Perfect slogan.'
 page:
   403: ''
   404: ''
