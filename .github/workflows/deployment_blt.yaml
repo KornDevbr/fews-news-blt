@@ -65,7 +65,7 @@ jobs:
 
       - name: Build and Deploy the artifacts
         run: |
-          ./vendor/bin/blt artifact:deploy --branch $GITHUB_REF_NAME --no-interaction --verbose
+          ./vendor/bin/blt artifact:deploy --branch $GITHUB_REF_NAME --no-interaction --verbose --ignore-dirty
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |
