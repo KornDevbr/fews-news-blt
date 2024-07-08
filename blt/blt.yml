@@ -45,3 +45,14 @@ command-hooks:
 deploy:
   dir: deploy
   docroot: '${deploy.dir}/web'
+  exclude_file: ${repo.root}/blt/deploy-exclude.txt
+
+tests:
+  phpunit:
+    # Paths for tests executing.
+    - path: '${repo.root}/web/test'
+      config: ${docroot}/core/phpunit.xml.dist
+      directory: '${repo.root}/web/test'
+    - path: '${repo.root}/web/test1'
+      config: ${docroot}/core/phpunit.xml.dist
+      directory: '${repo.root}/web/test1'

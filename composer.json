@@ -21,10 +21,14 @@
         "pantheon-systems/drupal-integrations": "^9",
         "cweagans/composer-patches": "^1.7",
         "drush/drush": "^11 || ^12",
-        "acquia/blt": "^13.7"
+        "acquia/blt": "^13.7",
+        "drupal/coder": "^8.3",
+        "acquia/blt-drupal-test": "^1.0",
+        "acquia/blt-behat": "^1.4"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.2"
+        "drupal/core-dev": "^9.2",
+        "acquia/blt-phpcs": "^1.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -80,7 +84,8 @@
             "drupal/core-composer-scaffold": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
-            "acquia/blt": true
+            "acquia/blt": true,
+            "acquia/blt-phpcs": true
         }
     }
 }
