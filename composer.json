@@ -28,7 +28,8 @@
     },
     "require-dev": {
         "drupal/core-dev": "^9.2",
-        "acquia/blt-phpcs": "^1.0"
+        "acquia/blt-phpcs": "^1.0",
+        "drevops/git-artifact": "^0.6.0"
     },
     "conflict": {
         "drupal/drupal": "*"

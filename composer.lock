@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffa8fd2470372f0919edf21056ff93d3",
+    "content-hash": "1c1eac0adc0b731de00b0cbbf0951348",
     "packages": [
         {
             "name": "acquia/blt",
@@ -12162,6 +12162,62 @@
                 "source": "https://github.com/acquia/coding-standards"
             },
             "time": "2023-03-06T17:49:20+00:00"
+        },
+        {
+            "name": "drevops/git-artifact",
+            "version": "0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drevops/git-artifact.git",
+                "reference": "16f7e61eb459bb8a1d665a07d6b2f26bb011a3d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drevops/git-artifact/zipball/16f7e61eb459bb8a1d665a07d6b2f26bb011a3d2",
+                "reference": "16f7e61eb459bb8a1d665a07d6b2f26bb011a3d2",
+                "shasum": ""
+            },
+            "require": {
+                "consolidation/robo": "^4",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "escapestudios/symfony2-coding-standard": "^3",
+                "phpmd/phpmd": "^2.15",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "robo-tasks",
+            "autoload": {
+                "psr-4": {
+                    "DrevOps\\Robo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Skrypnyk",
+                    "email": "alex@drevops.com"
+                }
+            ],
+            "description": "Build artifact from your codebase in CI and push it to a separate git repo.",
+            "homepage": "https://github.com/drevops/git-artifact",
+            "support": {
+                "issues": "https://github.com/drevops/git-artifact/issues",
+                "source": "https://github.com/drevops/git-artifact"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/alexskrypnyk",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2024-01-02T04:20:12+00:00"
         },
         {
             "name": "phpcompatibility/php-compatibility",

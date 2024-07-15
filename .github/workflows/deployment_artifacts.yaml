@@ -3,11 +3,11 @@ name: Deployment to Pantheon via BLT
 on:
   push:
     branches:
-      - blt
+      - git-artifact_tool_implementing-artifact
 
 jobs:
-  deployment_blt:
-    name: "Deploy code to Pantheon via BLT"
+  deployment_artifacts:
+    name: "Deploy code to Pantheon via DrevOps Git Artifacts tool"
     timeout-minutes: 7
     runs-on: ubuntu-latest
     env:
@@ -59,13 +59,17 @@ jobs:
           sudo chmod o+w /etc/ssh/ssh_config
           echo "StrictHostKeyChecking accept-new" >> /etc/ssh/ssh_config
 
-      - name: BLT install
+      - name: Build project
         run: |
-          composer require acquia/blt:^13.7
+          composer install
+          cd web/themes/custom/fewsnews_theme/
+          npm install && npm run build
 
-      - name: Build and Deploy the artifacts
+      - name: Push artifacts to Pantheon
+        env:
+          PANTHEON_REMOTE: ${{ secrets.PANTHEON_REMOTE }}
         run: |
-          ./vendor/bin/blt artifact:deploy --branch $GITHUB_REF_NAME --no-interaction --verbose --ignore-dirty
+          robo artifact --branch=$GITHUB_REF_NAME --mode=branch --push $PANTHEON_REMOTE
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |
