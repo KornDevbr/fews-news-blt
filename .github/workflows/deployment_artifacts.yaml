@@ -1,4 +1,4 @@
-name: Deployment to Pantheon via BLT
+name: Deployment to Pantheon via DrevOps Git Artifact
 
 on:
   push:
@@ -69,7 +69,7 @@ jobs:
         env:
           PANTHEON_REMOTE: ${{ secrets.PANTHEON_REMOTE }}
         run: |
-          robo artifact --branch=$GITHUB_REF_NAME --mode=branch --push $PANTHEON_REMOTE
+          ./vendor/bin/robo artifact --branch=$GITHUB_REF_NAME --mode=branch --push $PANTHEON_REMOTE
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |

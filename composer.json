@@ -24,7 +24,8 @@
         "acquia/blt": "^13.7",
         "drupal/coder": "^8.3",
         "acquia/blt-drupal-test": "^1.0",
-        "acquia/blt-behat": "^1.4"
+        "acquia/blt-behat": "^1.4",
+        "consolidation/robo": "^4.0"
     },
     "require-dev": {
         "drupal/core-dev": "^9.2",
