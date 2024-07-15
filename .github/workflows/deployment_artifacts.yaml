@@ -69,7 +69,7 @@ jobs:
         env:
           PANTHEON_REMOTE: ${{ secrets.PANTHEON_REMOTE }}
         run: |
-          ./vendor/bin/robo artifact --branch=$GITHUB_REF_NAME --mode=branch --push $PANTHEON_REMOTE
+          ./vendor/bin/robo artifact --branch=$GITHUB_REF_NAME --mode=force-push --push $PANTHEON_REMOTE
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |
