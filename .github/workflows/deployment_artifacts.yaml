@@ -3,7 +3,7 @@ name: Deployment to Pantheon via DrevOps Git Artifact
 on:
   push:
     branches:
-      - git-artifact_tool_implementing-artifact
+      - master
 
 jobs:
   deployment_artifacts:
