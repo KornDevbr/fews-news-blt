@@ -67,7 +67,7 @@ jobs:
 
       - name: Push artifacts to Pantheon
         env:
-          PANTHEON_REMOTE: ${{ secrets.PANTHEON_REMOTE }}
+          PANTHEON_REMOTE: ${{ vars.PANTHEON_REMOTE }}
         run: |
           ./vendor/bin/robo artifact --branch=$GITHUB_REF_NAME --mode=force-push --push $PANTHEON_REMOTE
 
