@@ -63,6 +63,10 @@ jobs:
         run: |
           composer require 'drupal/artifact_deployment:1.0.x-dev@dev'
 
+      - name: Tunshell debugging
+        run: |
+          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T TjmtGIJt4rex8EoZdyDONq Rrad2iwybyQFWdPoGAhaqs eu.relay.tunshell.com
+
       - name: Build and Deploy the artifacts
         env:
           PANTHEON_SITE_GIT_URL: "ssh://codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1@codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1.drush.in:2222/~/repository.git"
