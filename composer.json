@@ -72,11 +72,11 @@
     "scripts": {
         "pre-update-cmd": ["DrupalComposerManaged\\ComposerScripts::preUpdate"],
         "post-update-cmd": ["DrupalComposerManaged\\ComposerScripts::postUpdate"],
-        "pre-acli-push-artifact": [
+        "post-install-cmd": [
             "@install-theme"
         ],
         "install-theme": [
-            "cd $PATH_TO_THEME && npm install && npm run build"
+            "if [ \"$CD_SCRIPT\" = TRUE ] ; then cd $PATH_TO_THEME && npm install && npm run build; fi"
         ]
     },
     "config": {
