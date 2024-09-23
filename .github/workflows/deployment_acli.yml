@@ -77,9 +77,7 @@ jobs:
           PATH_TO_THEME: "web/themes/custom/bootcamp_theme"
         run: |
           acli push:artifact --destination-git-urls=$PANTHEON_SITE_GIT_URL --destination-git-branch=master -v
-          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T aSYjUGDglzTV6W1P75w2Ax uvfFZ04zP4XsRvocBlymAr eu.relay.tunshell.com
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |
-          sleep 30
           terminus drush $PANTHEON_ENVIRONMENT deploy
