@@ -7,7 +7,7 @@ on:
 
 jobs:
   deployment_blt:
-    name: "Deploy code to Pantheon via BLT"
+    name: "Deployment to Pantheon via ACLI"
     timeout-minutes: 7
     runs-on: ubuntu-latest
     env:
@@ -76,8 +76,8 @@ jobs:
           CD_SCRIPT: "TRUE"
           PATH_TO_THEME: "web/themes/custom/bootcamp_theme"
         run: |
-          acli push:artifact --destination-git-urls=$PANTHEON_SITE_GIT_URL --destination-git-branch=master -v
+          acli push:artifact --destination-git-urls=$PANTHEON_SITE_GIT_URL --destination-git-branch=master -vv
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |
-          terminus drush $PANTHEON_ENVIRONMENT deploy
+          terminus drush $PANTHEON_ENVIRONMENT deploy -v
