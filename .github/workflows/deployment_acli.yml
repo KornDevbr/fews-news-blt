@@ -1,4 +1,4 @@
-name: Deployment to Pantheon via BLT
+name: Deployment to Pantheon via ACLI
 
 on:
   push:
@@ -65,6 +65,11 @@ jobs:
           sudo chmod o+w /etc/ssh/ssh_config
           echo "StrictHostKeyChecking accept-new" >> /etc/ssh/ssh_config
 
+      - name: Git config
+        run: |
+          git config --global user.email "cd-script@github.com"
+          git config --global user.name "CD Script"
+
       - name: Artifact Deployment module install
         run: |
           composer require 'drupal/artifact_deployment:1.0.x-dev@dev'
@@ -72,9 +77,10 @@ jobs:
       - name: Build and Deploy the artifacts
         env:
           PANTHEON_SITE_GIT_URL: "ssh://codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1@codeserver.dev.bf0a27cb-4a57-47b8-aab6-064b573610c1.drush.in:2222/~/repository.git"
+          CD_SCRIPT: "TRUE"
+          PATH_TO_THEME: "web/themes/custom/bootcamp_theme"
         run: |
-          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T 8G5pchx9qRfOQbP7MRuL9J GUfKwR6ENWBa39Pcbe0PYK eu.relay.tunshell.com
-          acli push:artifact --destination-git-urls=$PANTHEON_SITE_GIT_URL --destination-git-branch=master
+          acli push:artifact --destination-git-urls=$PANTHEON_SITE_GIT_URL --destination-git-branch=master -v
 
       - name: Deploy changes to the Drupal website on Pantheon.
         run: |

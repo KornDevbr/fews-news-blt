@@ -71,7 +71,13 @@
     },
     "scripts": {
         "pre-update-cmd": ["DrupalComposerManaged\\ComposerScripts::preUpdate"],
-        "post-update-cmd": ["DrupalComposerManaged\\ComposerScripts::postUpdate"]
+        "post-update-cmd": ["DrupalComposerManaged\\ComposerScripts::postUpdate"],
+        "post-install-cmd": [
+            "@install-theme"
+        ],
+        "install-theme": [
+            "if [ \"$CD_SCRIPT\" = TRUE ] ; then cd $PATH_TO_THEME && npm install && npm run build; fi"
+        ]
     },
     "config": {
         "preferred-install": "dist",
