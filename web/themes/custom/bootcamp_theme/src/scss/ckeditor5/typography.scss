@@ -1,0 +1,27 @@
+@import "../media_queries";
+@import "../vars";
+
+.ckeditor5-html-field a, .ckeditor5-html-field a:visited {
+  color: $primary-blue;
+}
+
+.ckeditor5-html-field {
+  font-size: 20px;
+  line-height: 160%;
+  color: $neutral-grey;
+}
+
+.ckeditor5-html-field h2,
+.ckeditor5-html-field h3,
+.ckeditor5-html-field h4,
+.ckeditor5-html-field h5,
+.ckeditor5-html-field h6 {
+  padding-block: 40px 16px;
+}
+
+.ckeditor5-html-field p {
+  margin: 16px 0;
+}
+.page-break {
+  clear: both;
+}

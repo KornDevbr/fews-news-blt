@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a formatted responsive image field.
+ *
+ * Available variables:
+ * - responsive_image: A collection of responsive image data.
+ * - url: An optional URL the image can be linked to.
+ *
+ * @see template_preprocess_responsive_image_formatter()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if url %}
+  <a href="{{ url }}">{{ responsive_image }}</a>
+{% else %}
+  {{ responsive_image }}
+{% endif %}
+  {% if is_appliable_image_style %}
+    <div class="swiffy-slider__gallery-wrapper">
+      <div class="swiffy-slider slider-nav-mousedrag slider-nav-visible swiffy-slider__gallery-initialization-container">
+        <div class="swiffy-top swiffy__close-mark">×</div>
+        <ul class="slider-container">
+          <li class="slide swiffy-slider__gallery-slide">
+            {# Full image goes here. #}
+            {% if gallery_image %}
+              {{ gallery_image }}
+            {% endif %}
+            <div class="slide__body">
+              {# Full description goes here. #}
+              {% if full_description %}
+                {{ full_description }}
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+        <div class="nav swiffy-slider__gallery-nav-container">
+          <button type="button" class="slider-nav swiffy-slider__gallery-nav-item"></button>
+          <button type="button" class="slider-nav swiffy-slider__gallery-nav-item slider-nav-next"></button>
+        </div>
+      </div>
+    </div>
+  {% endif %}

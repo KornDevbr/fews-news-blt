@@ -1,0 +1,49 @@
+{%
+  set title_classes = [
+  label_display == 'visually_hidden' ? 'visually-hidden',
+]
+%}
+{{ attach_library('bootcamp_theme/slider-and-gallery') }}
+<div{{ swiffy_slider_attributes }}>
+  {% if label_hidden is empty %}
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+  {% endif %}
+  <ul{{ attributes.addClass('slider-container') }}>
+    {% for item in items %}
+      <li{{ item.attributes }}>{{ item.content }}</li>
+    {% endfor %}
+  </ul>
+  <button type="button" class="slider-nav" aria-label="{{ 'Go to previous'|t }}"></button>
+  <button type="button" class="slider-nav slider-nav-next" aria-label="{{ 'Go to next'|t }}"></button>
+  <div class="slider-indicators">
+    {% for item in items %}
+      <button {% if loop.index0 == 0 %}class="active" {% endif %} aria-label="{{ 'Go to slide'|t }}"></button>
+    {% endfor %}
+  </div>
+</div>
+<div class="swiffy-slider__gallery-wrapper">
+  <div class="swiffy-slider slider-nav-mousedrag slider-nav-visible swiffy-slider__gallery-initialization-container">
+    <div class="swiffy-top swiffy__close-mark">×</div>
+    <ul class="slider-container">
+      {% for item in items %}
+        <li class="slide swiffy-slider__gallery-slide">
+          {# Full image goes here. #}
+          {# TODO: Add your image style if needed. #}
+          {% if item.gallery_image %}
+            {{ item.gallery_image }}
+          {% endif %}
+          <div class="slide__body">
+            {# Full description goes here. #}
+            {% if item.full_description %}
+              {{ item.full_description }}
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="nav swiffy-slider__gallery-nav-container">
+      <button type="button" class="slider-nav swiffy-slider__gallery-nav-item"></button>
+      <button type="button" class="slider-nav swiffy-slider__gallery-nav-item slider-nav-next"></button>
+    </div>
+  </div>
+</div>

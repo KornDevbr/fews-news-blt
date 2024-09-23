@@ -1,0 +1,18 @@
+.slider-container {
+  display: flex;
+  background-color: black;
+  color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.slider-nav,
+.slider-indicators,
+.swiffy-slider__gallery-wrapper {
+  display: none;
+}
+
+.field--name-field-full-description,
+.field--name-field-image-caption {
+  padding: 0 6px;
+}

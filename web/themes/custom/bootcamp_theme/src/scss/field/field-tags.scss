@@ -1,0 +1,42 @@
+@import "../vars";
+
+.field--name-field-tags {
+  padding-block-start: 20px;
+}
+
+.field-tags__items-wrapper {
+  padding-block-start: 16px;
+}
+
+.field-tags__item a:visited {
+  color: $secondary-blue;
+}
+
+.field-tags__item a {
+  display: inline-block;
+  font-size: 18px;
+  text-transform: capitalize;
+  text-decoration: none;
+  line-height: 18.72px;
+  color: $secondary-blue;
+  padding: 14.5px 20px;
+  border: 2px solid $primary-blue;
+  transition: all .3s ease-in-out;
+
+  &:hover {
+    color: $white;
+    text-decoration: underline;
+    background-color: $primary-blue;
+  }
+}
+
+.field-tags__item.all-tags a {
+  color: $shining-orange;
+  border-color: $shining-orange;
+
+  &:hover {
+    color: $white;
+    text-decoration: none;
+    background-color: $shining-orange;
+  }
+}

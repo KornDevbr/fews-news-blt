@@ -1,0 +1,24 @@
+.ckeditor5-html-field figure {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0 auto;
+  margin-block-end: 30px;
+  float: none;
+  min-inline-size: fit-content;
+}
+.ckeditor5-html-field figure img {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+.ckeditor5-html-field figcaption {
+  color: var(--Neutral-Grey-700, #3F4B5A);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.media--view-mode-ckeditor-embedded {
+  inline-size: fit-content;
+}

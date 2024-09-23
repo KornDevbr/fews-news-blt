@@ -1,0 +1,33 @@
+@mixin resolution($media) {
+  @if $media == mobile {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+  @if $media == tablet {
+    @media (min-width: 769px) {
+      @content;
+    }
+  }
+  @if $media == desktop-small {
+    @media (min-width: 1148px) {
+      @content;
+    }
+  }
+  @if $media == desktop-wide {
+    @media (min-width: 1281px) {
+      @content;
+    }
+  }
+  @if $media == desktop-large {
+    @media (min-width: 1921px) {
+      @content;
+    }
+  }
+
+  @if $media == desktop-extra-large {
+    @media (min-width: 2305px) {
+      @content;
+    }
+  }
+}

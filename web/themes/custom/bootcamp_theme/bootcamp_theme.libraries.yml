@@ -1,0 +1,62 @@
+global-styling:
+  css:
+    theme:
+      css/global.css: { }
+  # We need it everywhere to make JS work correctly.
+  dependencies:
+    - core/drupal
+
+header:
+  css:
+    theme:
+      css/header/header.css: { }
+      css/header/language-switcher.css: { }
+  js:
+    js/language-switcher.js: { }
+  dependencies:
+    - core/once
+    - core/jquery
+
+breadcrumbs:
+  css:
+    theme:
+      css/block/breadcrumbs.css: { }
+
+node:
+  css:
+    theme:
+      css/node/layout.css: { }
+      css/node/layout-desktop.css: { media: "screen and (min-width: 1148px)" }
+
+ckeditor5-components:
+  css:
+    theme:
+      css/ckeditor5/figure.css: { }
+      css/ckeditor5/figure-desktop.css: { media: "screen and (min-width: 1148px)" }
+
+
+slider-and-gallery:
+  css:
+    theme:
+      css/ckeditor5/slider-gallery.css: { }
+  js:
+    js/ckeditor-image-behaviors.js: { }
+  dependencies:
+    - core/once
+    - core/jquery
+
+tags:
+  css:
+    theme:
+      css/field/field-tags.css: { }
+
+footer:
+  css:
+    theme:
+      css/footer/footer.css: { }
+
+dropdown-accessibility:
+  js:
+    js/dropdown-list-accessibility.js: { }
+  dependencies:
+    - core/jquery

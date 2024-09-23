@@ -1,0 +1,25 @@
+{
+  "name": "bootcamp_theme",
+  "version": "1.0.0",
+  "description": "Gulp build for the Linno theme.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp --development",
+    "build": "gulp build --production"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "6.1.0",
+    "gulp": "^5.0.0",
+    "gulp-mode": "^1.1.0",
+    "gulp-sass": "~5",
+    "gulp-sourcemaps": "~3",
+    "sass": "~1"
+  },
+  "dependencies": {
+    "gulp-svg-sprite": "^2.0.3",
+    "gulp-terser": "^2.1.0"
+  }
+}

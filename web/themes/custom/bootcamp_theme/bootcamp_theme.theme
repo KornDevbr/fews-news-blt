@@ -1,0 +1,188 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming.
+ */
+
+use Drupal\Core\Render\Markup;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\media\MediaInterface;
+use Drupal\paragraphs\ParagraphInterface;
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function bootcamp_theme_page_attachments_alter(array &$attachments): void {
+  $dir = \Drupal::service('language_manager')->getCurrentLanguage()->getDirection();
+
+  /*
+   * Critical Fonts:
+   * Preload only fonts used on mobile in the above the fold section.
+   * https://www.marketingtracer.com/seo/above-the-fold
+   * Place your critical fonts inside the folder
+   * - fonts/critical common to LTR & RTL
+   * - fonts/critical/ltr for LTR only
+   * - fonts/critical/rtl for RTL only
+   */
+  $path_critical_fonts = DRUPAL_ROOT . '/' .
+    \Drupal::service('theme.manager')->getActiveTheme()->getPath() .
+    '/fonts/critical/';
+
+  if (is_dir($path_critical_fonts)) {
+    $files = \Drupal::service('file_system')->scanDirectory($path_critical_fonts, '/.*.woff2/', ['recurse' => FALSE]);
+    $path_critical_fonts .= $dir . '/';
+    $files += \Drupal::service('file_system')->scanDirectory($path_critical_fonts, '/.*.woff2/', ['recurse' => FALSE]);
+    foreach ($files as $font) {
+      $attachments['#attached']['html_head_link'][] = [
+        [
+          'rel' => 'preload',
+          'href' => str_replace(DRUPAL_ROOT, '', $font->uri),
+          'as' => 'font',
+          'type' => 'font/woff2',
+          'crossorigin' => 'anonymous',
+        ],
+        'font',
+      ];
+    }
+  }
+
+  // To load fonts faster, we avoid to use @import inside css file
+  // We inline font related CSS into the head directly.
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('bootcamp_theme');
+  $file_path = $theme_path . "/css/fonts-$dir.css";
+  if (file_exists($file_path)) {
+    $inline_font_css = file_get_contents($file_path);
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'style',
+        '#value' => Markup::create($inline_font_css),
+      ],
+      'inline-font',
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field.
+ */
+function bootcamp_theme_preprocess_field(&$variables): void {
+  // Add specific libraries for ckeditor5 components styling on FE.
+  if (!empty($field_items = $variables['element']['#items'])
+    && !$field_items->isEmpty()) {
+    $attachable_formats = ['full_html', 'basic_html', 'articles_limited'];
+    $route_match = \Drupal::routeMatch();
+    foreach ($field_items->getValue() as $field_value) {
+      if (isset($field_value['format'])
+        && in_array($field_value['format'], $attachable_formats, TRUE)
+        && !empty(array_intersect([
+          'node',
+          'node_preview',
+        ], array_keys($route_match->getParameters()->all())))) {
+        $variables['attributes']['class'][] = 'ckeditor5-html-field';
+        $variables['#attached']['library'][] = 'bootcamp_theme/ckeditor5-components';
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function bootcamp_theme_preprocess_field__swiffy_slider_entity_reference(&$variables): void {
+  if (\Drupal::routeMatch()->getRouteName() === 'embed.preview') {
+    unset($variables['swiffy_slider_attributes']);
+    $variables['is_appliable_nav'] = FALSE;
+    return;
+  }
+
+  // Prepare extra things we need for FE. Those things are:
+  // full description field value, "full" image with image style.
+  foreach ($variables['items'] as &$item) {
+    if (!isset($item['content']['#paragraph'])
+      || !$item['content']['#paragraph'] instanceof ParagraphInterface) {
+      continue;
+    }
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+    $paragraph = $item['content']['#paragraph'];
+    if ($paragraph->hasField('field_full_description')
+      && !$paragraph->get('field_full_description')->isEmpty()) {
+      $item['full_description'] = $paragraph->get('field_full_description')
+        ->view([
+          'label' => 'hidden',
+        ]);
+    }
+
+    // Now build image for the "gallery" view.
+    // @todo Fix problem of non-existing image variable here.
+    // It's just an example so apply it per your project needs.
+    // Here will be just the render array of image field.
+    $image_item = $paragraph->get('field_image')?->entity?->get('field_media_image')
+      ?->first();
+    if (!$image_item instanceof ImageItem) {
+      return;
+    }
+    $item['gallery_image'] = $image_item->view();
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function bootcamp_theme_preprocess_responsive_image_formatter(&$variables): void {
+  // Check if a route is media preview. In this case no customizations
+  // needed.
+  $current_route = \Drupal::routeMatch()->getRouteName();
+  $restricted_routes = [
+    'media.filter.preview',
+    'embed.preview',
+  ];
+  if (in_array($current_route, $restricted_routes, TRUE)) {
+    return;
+  }
+
+  $allowed_responsive_image_styles = [
+    'ckeditor_embedded_portrait',
+    'ckeditor_embedded_landscape',
+  ];
+  if (!in_array($variables['responsive_image_style_id'], $allowed_responsive_image_styles, TRUE)) {
+    $variables['is_appliable_image_style'] = FALSE;
+    return;
+  }
+  $variables['is_appliable_image_style'] = TRUE;
+  // Add a full description render array here, so we can use it
+  // in a gallery for ckeditor embedded image.
+  $item = $variables['item'];
+  if ($item instanceof ImageItem) {
+    $full_description_from_media = bootcamp_theme_get_full_description_from_image($item);
+    if (!empty($full_description_from_media)) {
+      $variables['full_description'] = $full_description_from_media;
+    }
+    // @todo Fix the problem of original image here.
+    // It's just the example so pass a render array of desired image style here.
+    $variables['gallery_image'] = $variables['item']->view();
+  }
+}
+
+/**
+ * Gets a full description text from image.
+ */
+function bootcamp_theme_get_full_description_from_image(ImageItem $image_item): ?array {
+  $parent = $image_item->getParent();
+  if (!isset($parent) || !method_exists($parent, 'getEntity')) {
+    return NULL;
+  }
+  $parent_entity = $parent->getEntity();
+  if (!$parent_entity instanceof MediaInterface) {
+    return NULL;
+  }
+  if ($parent_entity->hasField('field_full_description')
+    && !$parent_entity->get('field_full_description')->isEmpty()) {
+    return $parent_entity->get('field_full_description')->view([
+      'label' => 'hidden',
+    ]);
+  }
+
+  return NULL;
+}
